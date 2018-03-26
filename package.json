@@ -2,6 +2,7 @@
   "name": "eve-outpost",
   "version": "0.0.1",
   "description": "A market and manufacturing manager for EVE Online.",
+  "private": false,
   "main": "server.js",
   "repository": "https://github.com/tataton/eve-outpost",
   "author": "T. Andrew Taton <thomas.andrew.taton@gmail.com>",
