@@ -6,6 +6,7 @@ EVE Outpost is a market and manufacturing manager for [EVE Online](https://www.e
 * React.js
 * React Router (DOM)
 * Redux
+* Redux Thunk
 * Semantic-UI
 
 ### Server-Side Technologies
