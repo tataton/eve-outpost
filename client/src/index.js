@@ -1,19 +1,28 @@
 import React from 'react';
-import { createStore } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import rootReducer from './reducers';
-import middleware from './middleware';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import userReducer from './reducers/userReducer';
+import errorReducer from './reducers/errorReducer';
+import thunk from 'redux-thunk';
 import AppContainer from './containers/AppContainer';
 import 'semantic-ui-css/semantic.min.css';
 
-const store = createStore(rootReducer, middleware);
+const history = createHistory();
+const reduxRouterMiddleware = routerMiddleware(history);
+
+const store = createStore(combineReducers({
+    router: routerReducer,
+    user: userReducer,
+    error: errorReducer
+}), applyMiddleware(thunk, reduxRouterMiddleware));
 
 render((
     <Provider store={store}>
-        <BrowserRouter>
+        <ConnectedRouter history={history}>
             <AppContainer />
-        </BrowserRouter>
+        </ConnectedRouter>
     </Provider>
 ), document.getElementById('root'));

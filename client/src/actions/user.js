@@ -1,5 +1,5 @@
 export const SET_USER = 'SET_USER';
-export const SET_USER_ERROR = 'SET_USER_ERROR';
+export const SET_ERROR = 'SET_ERROR';
 export const LOG_OUT_USER = 'LOG_OUT_USER';
 
 function setUser (user) {
@@ -11,7 +11,7 @@ function setUser (user) {
 
 function setUserError (error) {
     return {
-        type: SET_USER_ERROR,
+        type: SET_ERROR,
         error
     }
 }
@@ -22,7 +22,7 @@ function logOutUser () {
     }
 }
 
-export function retrieveUserAction () {
+export function getUserAction () {
     return (dispatch) => {
         return fetch('/auth/getuserinfo', {credentials: 'include'})
             .then(response => response.json())

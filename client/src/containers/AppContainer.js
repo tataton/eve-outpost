@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { retrieveUserAction } from '../actions/user';
+import { getUserAction } from '../actions/user';
 import View from '../components/View';
 
 class App extends Component {
 
     componentDidMount() {
-        this.props.fetchUser();
-        window.refreshUser = this.props.fetchUser;
+        this.props.getUserAction();
+        window.refreshUser = this.props.getUserAction;
     }
 
     render(){
@@ -17,18 +17,11 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        user: state.user,
-        error: state.error        
-    }
-}
+const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        fetchUser: () => dispatch(retrieveUserAction())
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    getUserAction: () => dispatch(getUserAction())
+});
 
 const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
 

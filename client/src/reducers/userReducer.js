@@ -1,6 +1,6 @@
 import { SET_USER, LOG_OUT_USER } from '../actions/user';
 
-function user (state = {}, action) {
+function userReducer (state = {}, action) {
     switch(action.type) {
         case SET_USER :
           return action.user;
@@ -11,4 +11,4 @@ function user (state = {}, action) {
     }
 }
 
-export default user;
+export default userReducer;
