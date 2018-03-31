@@ -1,6 +1,7 @@
+import { DISPLAY_ERROR } from './error';
 export const SET_USER = 'SET_USER';
-export const SET_ERROR = 'SET_ERROR';
 export const LOG_OUT_USER = 'LOG_OUT_USER';
+export const OPEN_OAUTH = 'OPEN_OAUTH';
 
 function setUser (user) {
     return {
@@ -9,9 +10,9 @@ function setUser (user) {
     }
 }
 
-function setUserError (error) {
+function displayError (error) {
     return {
-        type: SET_ERROR,
+        type: DISPLAY_ERROR,
         error
     }
 }
@@ -27,7 +28,7 @@ export function getUserAction () {
         return fetch('/auth/getuserinfo', {credentials: 'include'})
             .then(response => response.json())
             .then(user => dispatch(setUser(user)))
-            .catch(error => dispatch(setUserError(error)))
+            .catch(error => dispatch(displayError(error)))
     }
 }
 

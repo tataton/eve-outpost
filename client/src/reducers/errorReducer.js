@@ -1,9 +1,12 @@
-import { SET_ERROR } from '../actions/user';
+import { DISPLAY_ERROR } from '../actions/error';
+import { DISMISS_ERROR } from '../actions/error';
 
 function errorReducer (state = {}, action) {
     switch(action.type) {
-        case SET_ERROR :
+        case DISPLAY_ERROR :
           return action.error;
+        case DISMISS_ERROR :
+          return {};
         default :
           return state;
     }

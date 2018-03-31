@@ -1,14 +1,15 @@
 import React, { Fragment } from 'react';
+import NavBarContainer from '../containers/NavBarContainer';
+import ErrorDisplayContainer from '../containers/ErrorDisplayContainer';
+import MainContainer from '../containers/MainContainer';
 
 const View = () => {
     return (
-        <h1>Checking!</h1>
-/*
         <Fragment>
             <NavBarContainer />
+            <ErrorDisplayContainer />
             <MainContainer />
         </Fragment>
-*/
     )
 };
 
