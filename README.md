@@ -61,19 +61,19 @@ The project is designed to run in three different programming environments. Much
 
 The project supports continuous front-end development with hot reloading, via a Webpack development server. However, in order for this to work, you will actually need to run two servers at the same time: the Webpack server, and the parent project Node.js server. To do this:
 
-* Copy the contents of .env.development into .env. This will result in the parent project loading dev-environment variables into process.env upon start.
+* Copy the contents of `.env.development` into `.env`. This will result in the parent project loading dev-environment variables into process.env upon start.
 
 * Open one Terminal window in the parent project directory, and `yarn start` to start the Node.js server. It should report that the server is listening on localhost:5000.
 
 * Open a second Terminal window in the client project directory. Use `npm install` or `yarn` to install client dependencies, including `react-scripts`--React's development bundle that automates Webpack, Babel, and other dev tools. 
 
-* Still in the client directory Terminal, `yarn start` to start the Webpack dev server. The server will transpile code in client/src and serve it at http://localhost:3000. (It should automatically open a browser tab and navigate there.)
+* Still in the client directory Terminal, `yarn start` to start the Webpack dev server. The server will transpile code in `client/src` and serve it at `http://localhost:3000`. (It should automatically open a browser tab and navigate there.)
 
-"But wait," you might ask, "how do webpages at http://localhost:3000 make requests to localhost:5000? Doesn't that require cross-origin (CORS) permissions?" Luckily for us, the Webpack server provides a proxy server for exactly this purpose. It is set up with a "proxy": config object in the child package.json. I write about this because, if we add any http.get or .post routes from the front- to the back-end, we need to remember to include those routes in the child package.json proxy config object.
+"But wait," you might ask, "how do webpages at `http://localhost:3000` make requests to `localhost:5000`? Doesn't that require cross-origin (CORS) permissions?" Luckily for us, the Webpack server provides a proxy server for exactly this purpose. It is set up with a `{"proxy": config}` object in the child `package.json`. I write about this because, if we add any `http.get` or `.post` routes from the front- to the back-end, we need to remember to include those routes in the child `package.json` proxy config object.
 
 #### Staging
 
-The project can be tested in its build configuration by building the client side code locally. This will create a client/build directory, from which static front-end assets will be served. To do this:
+The project can be tested in its build configuration by building the client side code locally. This will create a `client/build` directory, from which static front-end assets will be served. To do this:
 
 * Create and switch to a new, temporary `build` branch in the git project with `git checkout -b build`.
 
@@ -83,7 +83,7 @@ The project can be tested in its build configuration by building the client side
 
 * Navigate Terminal to the parent directory, and `yarn start`. The server should report that it is listening on localhost:5000.
 
-* Open a browser to http://localhost:5000. All resources are available from this one address.
+* Open a browser to `http://localhost:5000`. All resources are available from this one address.
 
 You do not need to commit this `build` branch in git; it is temporary, meant to verify that the project is ready for deployment. In addition, if there are problems detected, they need to be corrected in the development environment. Once you've confirmed that the build process works, switch branches, and `git branch -d build` to remove the build branch. (This way, if you want to stage again later, you can create a new `build` branch that has no memory of the old one.)
 

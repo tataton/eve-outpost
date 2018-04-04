@@ -3,7 +3,7 @@ import ErrorDisplay from '../components/ErrorDisplay';
 import { dismissErrorAction } from '../actions/error';
 
 const mapStateToProps = state => ({
-    error: state.error
+    errorMessage: state.errorMessage
 });
 
 const mapDispatchToProps = dispatch => ({

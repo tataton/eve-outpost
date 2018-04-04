@@ -1,6 +1,15 @@
-// DRY, curried approach to generating OAuth strategies for both
-// Passport and 
+/**
+ * @fileOverview Curries OAuth strategies for both Passport and Refresh.
+ * Module exports individual strategies invoked by name.
+ * Must be coupled with environmental variables and OAuth
+ * provider routes.
+ * 
+ * @exports authonlyStrategy
+ * @exports readStrategy
+ * @exports writeStrategy
+ */
 
+const access = require('../config/config-access');
 const OAuth2Strategy = require('passport-oauth2');
 const axios = require('axios');
 const AUTH_URL = 'https://login.eveonline.com/oauth/authorize';
@@ -10,22 +19,15 @@ const AUTH_VERIFY_URL = 'https://login.eveonline.com/oauth/verify';
 const callbackURLString = (accessType) =>
     `${process.env.CALLBACK_PROTOCOL}://${process.env.CALLBACK_FQDN}/auth/${accessType}/callback`;
 
-const authScopes = {
-    read: [
-        'esi-search.search_structures.v1',
-        'esi-universe.read_structures.v1',
-        'esi-markets.structure_markets.v1'
-    ]
-};
-authScopes.write = [...authScopes.read,
-    'esi-assets.read_assets.v1',
-    'esi-markets.read_character_orders.v1'
-];
-
 const User = require('../services/service-database').User;
 
-// Callback for OAuthStrategy definitions, curried w/ string that
-// determines whether character is logging in with read or write access.
+/**
+ * Generates callback function required for OAuth strategy declaractions;
+ * accepts accessType string, and then tailors OAuth and database
+ * interactions based on that string.
+ * @param {string} accessType String representing a unique OAuth strategy.
+ * @returns {function} Callback function called by Passport.
+ */
 const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => {
     axios({
         method: 'get',
@@ -79,7 +81,13 @@ const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => 
     .catch(err => {return cb(err)});
 });
 
-// Curried function for generating OAuth2Strategies:
+/**
+ * Generates an OAuth2Strategy corresponding to an input string. String
+ * must match .env environmental variables and API key settings on the
+ * CCP ESI OAuth server.
+ * @param {string} accessType String representing a unique OAuth strategy.
+ * @returns {OAuth2Strategy} Named OAuth2Strategy for consumption by Passport.
+ */
 const strategy = (accessType) => (new OAuth2Strategy(
     {
         authorizationURL: AUTH_URL,
@@ -87,10 +95,11 @@ const strategy = (accessType) => (new OAuth2Strategy(
         clientID: process.env[`${accessType.toUpperCase()}_AUTH_CLIENT_ID`],
         clientSecret: process.env[`${accessType.toUpperCase()}_AUTH_CLIENT_SECRET`],
         callbackURL: callbackURLString(accessType),
-        scope: authScopes[accessType]
+        scope: access[accessType].authScopes
     },
     updateAuth(accessType)
 ));
 
+module.exports.authonlyStrategy = strategy('authonly');
 module.exports.readStrategy = strategy('read');
 module.exports.writeStrategy = strategy('write');

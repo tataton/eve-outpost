@@ -11,8 +11,6 @@ You can find the most recent version of the Create React App guide [here](https:
 		accessType: string,
 		lastVisitedLocations: [integer]
 	},
-	error: {
-		message: string
-	}
+	errorMessage: string
 }
 ```

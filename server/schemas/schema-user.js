@@ -34,10 +34,6 @@ const userSchema = {
     },
     writeRefreshToken: {
         type: Sequelize.STRING
-    },
-    chosenLocation: {
-        type: Sequelize.BIGINT,
-        allowNull: true
     }
 };
 

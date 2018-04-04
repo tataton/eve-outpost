@@ -16,7 +16,7 @@ const reduxRouterMiddleware = routerMiddleware(history);
 const store = createStore(combineReducers({
     router: routerReducer,
     user: userReducer,
-    error: errorReducer
+    errorMessage: errorReducer
 }), applyMiddleware(thunk, reduxRouterMiddleware));
 
 render((

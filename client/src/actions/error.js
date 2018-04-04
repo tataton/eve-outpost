@@ -1,10 +1,10 @@
 export const DISPLAY_ERROR = 'DISPLAY_ERROR';
 export const DISMISS_ERROR = 'DISMISS_ERROR';
 
-export function displayErrorAction (error) {
+export function displayErrorAction (errorMessage) {
     return {
         type: DISPLAY_ERROR,
-        error
+        errorMessage
     }
 }
 

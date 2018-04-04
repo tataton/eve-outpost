@@ -1,15 +1,21 @@
 import React from 'react';
-import { Message } from 'semantic-ui-react';
 
-const ErrorDisplay = ({ error, dismissErrorAction }) => {
-    return (
-        <Message
-            error
-            onDismiss={dismissErrorAction}
-        >
-            {error.errorMessage}
-        </Message>
-    )
+const ErrorDisplay = ({ errorMessage, dismissErrorAction }) => {
+
+    if (errorMessage) {
+        console.log(errorMessage);
+        return (
+            <div class="ui negative message">
+                <i class="close icon" onClick={dismissErrorAction}></i>
+                <div class="header">
+                    {errorMessage}
+                </div>
+            </div>
+        )
+    } else {
+        return null;
+    }
+
 }
 
 export default ErrorDisplay;

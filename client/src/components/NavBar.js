@@ -1,5 +1,4 @@
 import React from 'react';
-import { Menu, Image, Button } from 'semantic-ui-react';
 import { oauthLogin, oauthLogoutAddress } from '../services/oauth';
 import loginButton from '../images/loginButton.png';
 import logo from '../images/logo.png';
@@ -11,6 +10,8 @@ const Navbar = ({ user, navToHubCompare }) => {
     const rightMenuItems = () => {
         if (!user.characterID) {
             return (
+                null
+/*                
                 <Menu.Item position='right'>
                     <Button onClick={oauthLogin}>
                         <Image
@@ -19,29 +20,20 @@ const Navbar = ({ user, navToHubCompare }) => {
                         />
                     </Button>
                 </Menu.Item>
+*/                
             )
         } else {
             return (
-                <Menu.Item position='right'>
-                    <Image 
-                        src={charImgURL(user.characterID)}
-                        size='mini'
-                        style={{ marginRight: '1.5em' }}
-                    />
+                <div class='item right'>
+                    <img class='ui mini image' src={charImgURL(user.characterID)} style={{ marginRight: '1.5em' }}/>
                     {user.characterName}
-                    <Button
-                        as='a'
-                        href={oauthLogoutAddress}
-                        style={{ marginLeft: '1.5em' }}
-                    >
-                        Logout
-                    </Button>
-                </Menu.Item>
+                </div>
             )
         }
     };
 
-    return (  
+    return (
+/*
         <Menu fixed='top' inverted>
             <Menu.Item header>
                 <Image 
@@ -52,15 +44,15 @@ const Navbar = ({ user, navToHubCompare }) => {
                 EVE Outpost
             </Menu.Item>
             <Menu.Item onClick={navToHubCompare}>Hub Comparison</Menu.Item>
-
-{/********* Add below section ********
-
-Other Menu.Item items will be just like hubcompare above.
-
-************ End add *************/}
-
             {rightMenuItems()}
         </Menu>
+*/
+        <div class="ui fixed inverted menu">
+            <div class="item header">
+                <img class='ui mini image' src={logo} style={{ marginRight: '1.5em' }}/>
+                EVE Outpost
+            </div>
+        </div>
     )
 
 };

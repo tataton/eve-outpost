@@ -1,12 +1,12 @@
 import { DISPLAY_ERROR } from '../actions/error';
 import { DISMISS_ERROR } from '../actions/error';
 
-function errorReducer (state = {}, action) {
+function errorReducer (state = '', action) {
     switch(action.type) {
         case DISPLAY_ERROR :
-          return action.error;
+          return action.errorMessage;
         case DISMISS_ERROR :
-          return {};
+          return '';
         default :
           return state;
     }
