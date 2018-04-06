@@ -17,8 +17,7 @@ const reloadPublicStructures = () =>
     ])
     .then(([arrayPrevPublicStructures, admin]) => {
         http.getAllPublicStructures()
-        .then(structureIDArray => 
-            Promise.map(structureIDArray, foundStructureID => 
+            .map(structureIDArray, foundStructureID => 
                 // Then, for each structureID in the array,
                 http.getStructureInfo(admin, foundStructureID)
                     .then(structureObject => {
@@ -47,8 +46,7 @@ const reloadPublicStructures = () =>
                     }
                 })
             })
-        )
-        .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)});
     });
 
 module.exports = reloadPublicStructures;

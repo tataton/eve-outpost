@@ -52,3 +52,6 @@ console.log(`Server listening on port ${process.env.PORT}.`);
 // const reloadPublicStructures = require('./server/services/service-reloadpublicstructures');
 // let timerId = setInterval(reloadPublicStructures, 86400000); // once per day
 // reloadPublicStructures(); // for testing
+
+//const loadMarketData = require('./server/services/service-loadMarketData');
+//loadMarketData();

@@ -127,6 +127,36 @@ const http = {
                 })
             })
         })
+    },
+
+    getPublicMarketOrdersInRegion: (regionID) => {
+        return axiosWithRetry({
+            url: `/markets/${regionID}/orders/?datasource=tranquility&order_type=sell`,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            const pages = response.headers['x-pages'];
+            if (pages > 1) {
+                return Promise.reduce(
+                    Array.from(new Array(Number(pages)), (x,i) => i + 1),
+                    (combinedArray, current) => {
+                        return axiosWithRetry({
+                            url: `/markets/${regionID}/orders/?datasource=tranquility&order_type=sell&page=${current}`,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(pageResponse => pageResponse.data)
+                        .then(resultArray => [...combinedArray, ...resultArray])
+                    }, []
+                )
+            } else {
+                return response.data
+            }
+        })
+        .catch(err => {console.log(err)})
     }
 }
 
