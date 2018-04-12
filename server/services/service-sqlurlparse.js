@@ -1,6 +1,9 @@
-/* Parses a Heroku Postgres URL string for substrings that contain
-connection information required by Sequelize. */
-
+/**
+ * Parses a Heroku Postgres URL string for substrings that contain
+ * connection information required by Sequelize.
+ * @param {String} URLstring
+ * @returns {Object} SQL database properties
+ */
 const sqlURLparse = (URLstring) => {
     const parsedArray = URLstring.match(/[A-Za-z0-9.-]+/g);
     const sqlizeObject = {

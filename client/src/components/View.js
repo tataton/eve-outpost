@@ -7,7 +7,6 @@ const View = () => {
     return (
         <Fragment>
             <NavBarContainer />
-            <div style={{marginTop: '4em'}}></div>
             <ErrorDisplayContainer />
             <MainContainer />
         </Fragment>

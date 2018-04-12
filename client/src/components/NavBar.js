@@ -1,60 +1,107 @@
-import React from 'react';
-import { oauthLogin, oauthLogoutAddress } from '../services/oauth';
-import loginButton from '../images/loginButton.png';
+import React, { Fragment } from 'react';
 import logo from '../images/logo.png';
+import './components.css';
 
 const charImgURL = characterID => `http://image.eveonline.com/Character/${characterID}_64.jpg`
 
-const Navbar = ({ user, navToHubCompare }) => {
+const Navbar = ({
+    user,
+    logOutUserAction,
+    navToComparisonShopper,
+    navToMarketBrowser,
+    navToMarketManager,
+    navToHangarManager,
+    navToProductionManager
+}) => {
+
+    const avatar = characterID => {
+        return (
+            <div class='item right'>
+                <img class='ui mini image' src={charImgURL(characterID)} alt='Avatar'/>
+                {user.characterName}
+            </div>            
+        )
+    };
+
+    const logoutButton = () => {
+        return (
+            <div id='nav-button' class='item right'>
+                <button class="ui button" onClick={logOutUserAction}>
+                    Logout
+                </button>
+            </div>
+        )
+    }
+
+    const crossLoginButton = currentAccessType => {
+
+    }
 
     const rightMenuItems = () => {
-        if (!user.characterID) {
+        if (user.accessType) {
             return (
-                null
-/*                
-                <Menu.Item position='right'>
-                    <Button onClick={oauthLogin}>
-                        <Image
-                            src={loginButton}
-                            size='small'
-                        />
-                    </Button>
-                </Menu.Item>
-*/                
+                <Fragment>
+                    {avatar(user.characterID)}
+                    {logoutButton()}
+                    {crossLoginButton(user.accessType)}
+                </Fragment>                
             )
         } else {
+            
+        }
+
+        if (user.characterID) {
             return (
-                <div class='item right'>
-                    <img class='ui mini image' src={charImgURL(user.characterID)} style={{ marginRight: '1.5em' }}/>
-                    {user.characterName}
-                </div>
+                <Fragment>
+                    {avatar(user.characterID)}
+                    {logoutButton()}
+                </Fragment>
             )
+        } else if (user.accessType && (user.accessType === 'read')) {
+            return null;
+        } else if (user.accessType && (user.accessType === 'write')) {
+            return null;
+        } else {
+            return null;
         }
     };
 
+    const middleMenuItems = () => {
+        if (user.accessType && (user.accessType === 'write')) {
+            return (
+                <Fragment>
+                    <div className='link item' onClick={navToHangarManager}>
+                        Hangar<br/>Manager
+                    </div>
+                    <div className='link item' onClick={navToMarketManager}>
+                        Market<br/>Manager
+                    </div>
+                    <div className='link item' onClick={navToProductionManager}>
+                        Production<br/>Manager
+                    </div>
+                </Fragment>
+            )
+        } else {
+            return null;
+        }
+    }
+
     return (
-/*
-        <Menu fixed='top' inverted>
-            <Menu.Item header>
-                <Image 
-                    size='mini'
-                    src={logo}
-                    style={{ marginRight: '1.5em' }}
-                />
-                EVE Outpost
-            </Menu.Item>
-            <Menu.Item onClick={navToHubCompare}>Hub Comparison</Menu.Item>
-            {rightMenuItems()}
-        </Menu>
-*/
-        <div class="ui fixed inverted menu">
-            <div class="item header">
-                <img class='ui mini image' src={logo} style={{ marginRight: '1.5em' }}/>
+        <div className='ui top fixed inverted menu'>
+            <div className='header item'>
+                <img className='ui mini image' src={logo} alt='logo'/>
                 EVE Outpost
             </div>
+            <div className='link item' onClick={navToMarketBrowser}>
+                Market<br/>Browser
+            </div>
+            <div className='link item' onClick={navToComparisonShopper}>
+                Comparison<br/>Shopper
+            </div>
+            {middleMenuItems()}
+            {rightMenuItems()}
         </div>
     )
-
 };
 
 export default Navbar;

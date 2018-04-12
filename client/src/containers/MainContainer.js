@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
-import Hubcompare from '../components/HubCompare';
+import { withRouter } from 'react-router-dom';
+import ComparisonShopper from '../components/ComparisonShopper';
+import MarketBrowser from '../components/MarketBrowser';
+import HangarManager from '../components/HangarManager';
+import MarketManager from '../components/MarketManager';
+import ProductionManager from '../components/ProductionManager';
 import Welcome from '../components/Welcome';
 
 const MainRouter = ({ user }) => {
@@ -11,62 +16,23 @@ const MainRouter = ({ user }) => {
                 render={props => {
                     if (!user.accessType) {
                         return (<Welcome />)
+                    } else {
+                        return (<Redirect to='/comparisonshoppper'/>)
                     }
-                    
                 }}
             />
-            <Route path='/hubcompare'
-                render={props => {
-                    return (<Hubcompare />)
-                    }
-                }
+            <Route path='/comparisonshopper'
+                component={ComparisonShopper}
             />
-{/******* Remove below section *******/}
+
+            <Route path='/marketbrowser'
+                component={MarketBrowser}
+            />              
             <Route path='/'
                 render={props =>
-                    (<Redirect to='/hubcompare'/>)
+                    (<Redirect to='/comparisonshopper'/>)
                 }
             />
-{/*********** End remove *************/}
-
-{/********* Add below section ********
-    These bits will require user.accessType to resolve (which
-    is why we've injected state here.)
-
-
-            <Route path='/market'
-                render={props =>
-                    (<Market />)
-                }
-            />
-            <Route path='/stock'
-                render={props =>
-                    requiresWriteAccess(Stock)
-                }
-                />
-            <Route path='/orders'
-                render={props =>
-                    requiresWriteAccess(Orders)
-                }
-            />
-            <Route path='/blueprints'
-                render={props =>
-                    requiresWriteAccess(Blueprints)
-                }
-            />
-            <Route exact path='/'
-                render={props =>
-                    (<Welcome />)
-                }
-            />
-            <Route path='/'
-                render={props =>
-                    (<Redirect to='/'/>)
-                }
-            />
-
-************ End add *************/}
-
         </Switch>
     )
 }
@@ -75,6 +41,6 @@ const mapStateToProps = state => ({
     user: state.user
 });
 
-const MainContainer = connect(mapStateToProps)(MainRouter);
+const MainContainer = withRouter(connect(mapStateToProps)(MainRouter));
 
 export default MainContainer;

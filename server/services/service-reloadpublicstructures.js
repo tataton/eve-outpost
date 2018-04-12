@@ -1,14 +1,12 @@
-/* Loads list of public structures, and then data about those
-structures, into the remote database. The service runs periodically
-under the control of server.js. */
-
 const Promise = require('bluebird');
-const http = require('./service-http');
-const PublicStructure = require('../services/service-database').PublicStructure;
-const SolarSystem = require('../services/service-database').SolarSystem;
-const User = require('./service-database').User;
+const { getAllPublicStructures, getStructureInfo } = require('./service-http');
+const { PublicStructure, SolarSystem, User } = require('../services/service-database');
 
-const reloadPublicStructures = () => 
+/**
+ * Loads list of public structures, and then data about those
+ * structures, from CCP ESI into the remote database.
+ */
+const reloadPublicStructures = () => {
     Promise.all([
         // Get past public structure references from database, for later.
         PublicStructure.findAll(),
@@ -16,10 +14,10 @@ const reloadPublicStructures = () =>
         User.findOne({where: {characterID: process.env.ADMIN_CHARID}})
     ])
     .then(([arrayPrevPublicStructures, admin]) => {
-        http.getAllPublicStructures()
+        getAllPublicStructures()
             .map(structureIDArray, foundStructureID => 
                 // Then, for each structureID in the array,
-                http.getStructureInfo(admin, foundStructureID)
+                getStructureInfo(admin, foundStructureID)
                     .then(structureObject => {
                         // Is this structure already in the database?
                         const structure = arrayPrevPublicStructures.find(structure => structure.structureID == foundStructureID)
@@ -48,5 +46,6 @@ const reloadPublicStructures = () =>
             })
             .catch(err => {console.log(err)});
     });
+};
 
 module.exports = reloadPublicStructures;

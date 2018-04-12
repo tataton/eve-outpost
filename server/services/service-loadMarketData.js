@@ -1,17 +1,19 @@
 const Promise = require('bluebird');
-const http = require('./service-http');
-const PubMarketOrder = require('./service-database').PubMarketOrder;
-const Region = require('./service-database').Region;
+const { getPublicMarketOrdersInRegion } = require('./service-http');
+const { PubMarketOrder, Region } = require('./service-database');
 
 const daysRemaining = (duration, issued) => {
     const daysPassed = parseInt((Date.now() - Date.parse(issued)) / 86400000);
     return (duration - daysPassed);
 }
 
+/**
+ * Loads public market orders from CCP ESI into the remote database.
+ */
 const loadMarketData = () => {
     Region.findAll()
         .mapSeries(region => {
-            return http.getPublicMarketOrdersInRegion(region.regionID)
+            return getPublicMarketOrdersInRegion(region.regionID)
                 .then(orderArray => orderArray.map(order => 
                     ({
                         orderID: order['order_id'],

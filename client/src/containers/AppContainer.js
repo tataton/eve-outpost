@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { getUserAction } from '../actions/user';
 import View from '../components/View';
 
@@ -23,6 +24,6 @@ const mapDispatchToProps = dispatch => ({
     getUserAction: () => dispatch(getUserAction())
 });
 
-const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
+const AppContainer = withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 
 export default AppContainer;

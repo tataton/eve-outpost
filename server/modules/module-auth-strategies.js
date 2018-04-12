@@ -100,6 +100,8 @@ const strategy = (accessType) => (new OAuth2Strategy(
     updateAuth(accessType)
 ));
 
-module.exports.authonlyStrategy = strategy('authonly');
-module.exports.readStrategy = strategy('read');
-module.exports.writeStrategy = strategy('write');
+module.exports = {
+    authonlyStrategy: strategy('authonly'),
+    readStrategy: strategy('read'),
+    writeStrategy: strategy('write')
+};

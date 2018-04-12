@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
-// The "catchall" handler: for any initial request that doesn't
+// The catchall handler: for any initial request that doesn't
 // match one above, and that isn't caught by React Router, send
 // back to home route.
 app.get('*', (req, res) => {

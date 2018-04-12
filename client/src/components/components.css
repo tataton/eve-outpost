@@ -1,0 +1,79 @@
+.img-overlay {
+    padding: 8rem 0;
+    text-align: center;
+    width: 100%;
+    color: white;
+}
+
+.img-overlay-title {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.img-overlay-description {
+    margin: 2rem 4rem 4rem 4rem;
+    font-size: 1.2rem;
+}
+
+.card-panel-read {
+    background-color: green!important;
+    max-height: 45px!important;
+}
+
+.card-panel-write {
+    background-color: blue!important;    
+    max-height: 45px!important;
+}
+
+.card-title {
+    color: white!important;
+}
+
+.card-description {
+    margin-top: 0;
+    text-align: justify;
+}
+
+.card-feature-list {
+    min-height: 90px!important;
+    max-height: 90px!important;
+}
+
+#button-area-1, 
+#button-area-2 {
+    border-top: 0!important;
+}
+
+#footer-area-1, 
+#footer-area-2 {
+    border-top: 0!important;
+    min-height: 100px!important;
+}
+
+.button-explanation {
+    margin-top: 0.2rem;
+    font-style: italic;
+    text-align: justify;
+}
+
+.login-button {
+    margin-bottom: 0.5rem;
+}
+
+.ui.background {
+    background-image: url('../images/Backdrop.jpg')!important;
+    background-size: cover!important;
+}
+
+.ui.menu .link.item {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.ui.menu .mini.image {
+    margin-right: 1.5em;
+}
+
+#nav-button {
+    margin-left: 0!important;
+}
