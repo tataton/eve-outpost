@@ -33,8 +33,24 @@ const Navbar = ({
         )
     }
 
-    const crossLoginButton = currentAccessType => {
+    /**
+     * Will return an appropriately styled JSX button that logs character
+     * in via the appropriate OAuth path.
+     * @param {String} targetAccessType
+     * @returns {JSX.Element} button
+     */
+    const loginButton = targetAccessType => {
+        return null;
+    }
 
+    /**
+     * Will return a JSX button that will sequentially log character
+     * out and then log them in via the other accessType.
+     * @param {String} currentAccessType User's current accessType
+     * @returns {JSX.Element} button
+     */
+    const crossLoginButton = currentAccessType => {
+        return null;
     }
 
     const rightMenuItems = () => {
@@ -47,22 +63,12 @@ const Navbar = ({
                 </Fragment>                
             )
         } else {
-            
-        }
-
-        if (user.characterID) {
             return (
                 <Fragment>
-                    {avatar(user.characterID)}
-                    {logoutButton()}
+                    {loginButton('read')}
+                    {loginButton('write')}
                 </Fragment>
             )
-        } else if (user.accessType && (user.accessType === 'read')) {
-            return null;
-        } else if (user.accessType && (user.accessType === 'write')) {
-            return null;
-        } else {
-            return null;
         }
     };
 

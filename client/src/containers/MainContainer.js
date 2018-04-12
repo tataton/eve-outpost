@@ -13,13 +13,9 @@ const MainRouter = ({ user }) => {
     return (
         <Switch>
             <Route exact path='/'
-                render={props => {
-                    if (!user.accessType) {
-                        return (<Welcome />)
-                    } else {
-                        return (<Redirect to='/comparisonshoppper'/>)
-                    }
-                }}
+                render={props => user.accessType ?
+                    (<Redirect to='/marketbrowser'/>) : (<Welcome />)
+                }
             />
             <Route path='/comparisonshopper'
                 component={ComparisonShopper}
@@ -27,10 +23,25 @@ const MainRouter = ({ user }) => {
 
             <Route path='/marketbrowser'
                 component={MarketBrowser}
-            />              
+            />
+            <Route path='/marketmanager'
+                render={props => (user.accessType === 'write') ?
+                    (<MarketManager />) : (<Redirect to='/marketbrowser'/>)
+                }
+            />
+            <Route path='/hangarmanager'
+                render={props => (user.accessType === 'write') ?
+                    (<HangarManager />) : (<Redirect to='/marketbrowser'/>)
+                }
+            />
+            <Route path='/productionmanager'
+                render={props => (user.accessType === 'write') ?
+                    (<ProductionManager />) : (<Redirect to='/marketbrowser'/>)
+                }
+            />
             <Route path='/'
                 render={props =>
-                    (<Redirect to='/comparisonshopper'/>)
+                    (<Redirect to='/marketbrowser'/>)
                 }
             />
         </Switch>
