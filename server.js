@@ -29,6 +29,10 @@ const auth = require('./server/routes/route-auth');
 app.use('/auth', auth);
 const popup = require('./server/routes/route-popup');
 app.use('/popup', popup);
+const location = require('./server/routes/route-location');
+app.use('/location', location);
+const geography = require('./server/routes/route-geography');
+app.use('/geography', geography);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -49,9 +53,9 @@ console.log(`Server listening on port ${process.env.PORT}.`);
 
 //** ------ SCHEDULED PROCESSES ------ **/
 
-// const reloadPublicStructures = require('./server/services/service-reloadpublicstructures');
+const reloadPublicStructures = require('./server/services/service-reloadpublicstructures');
 // let timerId = setInterval(reloadPublicStructures, 86400000); // once per day
-// reloadPublicStructures(); // for testing
+reloadPublicStructures(); // for testing
 
 //const loadMarketData = require('./server/services/service-loadMarketData');
 //loadMarketData();

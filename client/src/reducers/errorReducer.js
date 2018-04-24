@@ -1,5 +1,4 @@
-import { DISPLAY_ERROR } from '../actions/error';
-import { DISMISS_ERROR } from '../actions/error';
+import { DISPLAY_ERROR, DISMISS_ERROR } from '../actions/error';
 
 function errorReducer (state = '', action) {
     switch(action.type) {

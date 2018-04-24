@@ -1,5 +1,6 @@
 import React from 'react';
 import './components.css';
+import StationFinderContainer from '../containers/StationFinderContainer';
 
 const MarketBrowser = () => {
     return (
@@ -8,6 +9,7 @@ const MarketBrowser = () => {
                 <div className='img-overlay-title'>
                     Market Browser
                 </div>
+                <StationFinderContainer />
             </div>
         </div>
     )

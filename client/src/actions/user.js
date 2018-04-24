@@ -18,7 +18,7 @@ function logOutUser () {
 
 export function getUserAction () {
     return (dispatch) => {
-        return axios('/auth/getuserinfo')
+        return axios.get('/auth/getuserinfo')
             .then(response => response.data)
             .then(user => dispatch(setUser(user)))
             .catch(error => {})

@@ -6,6 +6,8 @@ import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
 import userReducer from './reducers/userReducer';
 import errorReducer from './reducers/errorReducer';
+import locationReducer from './reducers/locationReducer';
+import pastLocationsReducer from './reducers/pastLocationsReducer';
 import thunk from 'redux-thunk';
 import AppContainer from './containers/AppContainer';
 import 'semantic-ui-css/semantic.min.css';
@@ -16,7 +18,9 @@ const reduxRouterMiddleware = routerMiddleware(history);
 const store = createStore(combineReducers({
     router: routerReducer,
     user: userReducer,
-    errorMessage: errorReducer
+    errorMessage: errorReducer,
+    location: locationReducer,
+    pastLocations: pastLocationsReducer
 }), applyMiddleware(thunk, reduxRouterMiddleware));
 
 render((

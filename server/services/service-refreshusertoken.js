@@ -12,10 +12,10 @@ const requestNewAccessToken = Promise.promisify(refresh.requestNewAccessToken);
  * @param {String} accessType
  * @returns {Promise<String>} Valid accessToken (refreshed, or existing)
  */
-const refreshUserToken = (user, accessType = 'read') => {
+const refreshUserToken = (user, accessType = 'read', force = false) => {
     const timeToExpiration = Date.parse(user[`${accessType}AccessExpires`]) - Date.now();
-    if (timeToExpiration < 150000) {
-        // Less than 2.5 minutes left, or expired.
+    if ((timeToExpiration < 30000) || force) {
+        // Less than 10 minutes left, or expired, or forced programmatically.
         return requestNewAccessToken(`oauth2-${accessType}`, 
                     user[`${accessType}RefreshToken`])
                 .then(newAccessToken => {

@@ -30,10 +30,19 @@ overload error limit. */
  */
 const axiosWithDelayedRetry = axios.create({baseURL});
 const delayedRetryFailedRequest = (error) => {
-    if (error.status <= 503 && error.status >= 400 && error.config && !error.config.__isRetryRequest) {
+    if (error.config && !error.config.__isRetryRequest && error.status != 403) {
         error.config.__isRetryRequest = true;
-        return Promise.delay(1000 * error.response.headers['x-esi-error-limit-reset'] + 2000)
-            .then(() => axiosWithDelayedRetry(error.config));
+        if (error.response && error.response.data && error.response.data.error === 'expired') {
+            // Should force tokenUpdate here, then request again.
+        } else if (error.response && error.response.headers['x-esi-error-limit-reset']) {
+            console.log("Error limiting, waiting ", (1 * error.response.headers['x-esi-error-limit-reset'] + 2), " seconds.");
+            return Promise.delay(1000 * error.response.headers['x-esi-error-limit-reset'] + 2000)
+                .then(() => axiosWithDelayedRetry(error.config));
+        } else {
+            console.log("Generic error, waiting 30 seconds.")
+            return Promise.delay(30000)
+                .then(() => axiosWithDelayedRetry(error.config));
+        } 
     }
     throw error;
 };
@@ -49,17 +58,17 @@ axiosCheckMarket.interceptors.response.use(
     // If we get an error, things are more complicated.
     error => {
         if (error.response.status == 403) {
-            console.log(Errors remaining: , error.response.headers['x-esi-error-limit-remain']);
+            console.log('Errors remaining: ', error.response.headers['x-esi-error-limit-remain']);
             // Introduce a delay to deal with CCP error
             // throttling.                            
             if (error.response.headers['x-esi-error-limit-remain'] < (3 * Number(process.env.PROMISE_CONCURRENCY))) {
-                console.log(Approaching error limit; , error.response.headers['x-esi-error-limit-remain'],  remaining.);
+                console.log('Approaching error limit; ', error.response.headers['x-esi-error-limit-remain'], ' remaining.');
                 return Promise.delay((1000 * error.response.headers['x-esi-error-limit-reset']) + 2000, false);
             } else {
                 return false;
             }
         } else if (error.response.status == 503 && error.config && !error.config.__isRetryRequest) {
-            console.log(503 retry);
+            console.log('503 retry');
             error.config.__isRetryRequest = true;
             return Promise.delay((1000 * error.response.headers['x-esi-error-limit-reset']) + 2000, axiosCheckMarket(error.config));
         }
@@ -70,7 +79,7 @@ axiosCheckMarket.interceptors.response.use(
 /**
  * Retrieves all structures with public access control lists
  * (ACLs).
- * @returns {Number[]} Array of structureID numbers.
+ * @returns {Promise<Number[]>} Array of structureID numbers.
  */
 const getAllPublicStructures = () => {
     return axiosWithRetry({
@@ -89,9 +98,9 @@ const getAllPublicStructures = () => {
  * @param {Sequelize.Instance<User>} user Sequelize instance reference to character.
  * @param {String} systemName String to search structure names.
  * @param {String} authType Character's authorization type.
- * @returns {Number[]} Array of structureIDs containing search string in their structureName.
+ * @returns {Promise<Number[]>} Array of structureIDs containing search string in their structureName.
  */
-const getAllPrivateStructuresInSystem = (user, systemName, authType = 'read') => {
+const getAllStructuresInSystem = (user, systemName, authType = 'read') => {
     return refreshUserToken(user, authType)
     // Make sure user (Sequelize ref) accessToken is updated,
     .then(accessToken => {
@@ -102,7 +111,8 @@ const getAllPrivateStructuresInSystem = (user, systemName, authType = 'read') =>
                 'Authorization': `Bearer ${accessToken}`,
                 'Accept': 'application/json'
             }
-        }).then(response => response.data.structure)
+        })
+        .then(response => response.data.structure)
     })
 };
 
@@ -113,7 +123,7 @@ const getAllPrivateStructuresInSystem = (user, systemName, authType = 'read') =>
  * @param {Sequelize.Instance<User>} user Sequelize instance reference to character.
  * @param {Number} structureID for one structure
  * @param {String} authType Character's authorization type.
- * @returns {Object} Properties of requested structure.
+ * @returns {Promise<Object>} Properties of requested structure.
  */
 const getStructureInfo = (user, structureID, authType = 'read') => {
 // Retrieves data on a specific structure (ref by structureID).
@@ -153,10 +163,46 @@ const getStructureInfo = (user, structureID, authType = 'read') => {
 };
 
 /**
+ * Retrieves data from ESI on a specific structure (referenced by
+ * structureID), but with no market info.
+ * 
+ * @param {Sequelize.Instance<User>} user Sequelize instance reference to character.
+ * @param {Number} structureID for one structure
+ * @param {String} authType Character's authorization type.
+ * @returns {Promise<Object>} Properties of requested structure.
+ */
+const getStructureInfoWithoutMarket = (user, structureID, authType = 'read') => {
+    // Retrieves data on a specific structure (ref by structureID).
+    // Parameter 'user' is a Sequelize instance.
+        return refreshUserToken(user, authType)
+        // Make sure user (Sequelize ref) accessToken is updated,
+        .then(accessToken => {
+            // and use it to get data on the current structureID.
+            return axiosWithDelayedRetry({
+                url: `/universe/structures/${structureID}/?datasource=tranquility`,
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.data)
+            .then(({solar_system_id, name, type_id}) => {
+                // Returns object containing DB structure format.
+                return Promise.resolve({ 
+                    structureID,
+                    solarSystemID: solar_system_id,
+                    structureName: name,
+                    typeID: type_id
+                })
+            })
+        })
+};
+
+/**
  * Retrieves all public market orders in a region.
  * 
  * @param {Number} regionID
- * @returns {Object[]} Array of order objects.
+ * @returns {Promise<Object[]>} Array of order objects.
  */
 const getPublicMarketOrdersInRegion = (regionID) => {
     return axiosWithRetry({
@@ -190,7 +236,8 @@ const getPublicMarketOrdersInRegion = (regionID) => {
 
 module.exports = {
     getAllPublicStructures,
-    getAllPrivateStructuresInSystem,
+    getAllStructuresInSystem,
     getStructureInfo,
+    getStructureInfoWithoutMarket,
     getPublicMarketOrdersInRegion
 }

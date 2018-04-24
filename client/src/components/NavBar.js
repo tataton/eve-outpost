@@ -16,8 +16,8 @@ const Navbar = ({
 
     const avatar = characterID => {
         return (
-            <div class='item right'>
-                <img class='ui mini image' src={charImgURL(characterID)} alt='Avatar'/>
+            <div className='item right'>
+                <img className='ui mini image' src={charImgURL(characterID)} alt='Avatar'/>
                 {user.characterName}
             </div>            
         )
@@ -25,8 +25,8 @@ const Navbar = ({
 
     const logoutButton = () => {
         return (
-            <div id='nav-button' class='item right'>
-                <button class="ui button" onClick={logOutUserAction}>
+            <div id='nav-button' className='item right'>
+                <button className="ui button" onClick={logOutUserAction}>
                     Logout
                 </button>
             </div>

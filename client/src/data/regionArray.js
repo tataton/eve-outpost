@@ -68,4 +68,4 @@ const regionArray = [
     {regionID: 10000006, regionName: 'Wicked Creek'}
 ];
 
-module.exports = regions;
+module.exports = regionArray;
