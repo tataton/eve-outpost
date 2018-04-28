@@ -2,11 +2,19 @@ import React, { Fragment } from 'react';
 import { oauthLogin } from '../services/oauth';
 import logo from '../images/logo.png';
 import './components.css';
+import { 
+    marketBrowserAddress, 
+    comparisonShopperAddress, 
+    marketManagerAddress, 
+    hangarManagerAddress, 
+    productionManagerAddress
+} from '../navigation';
 
 const charImgURL = characterID => `http://image.eveonline.com/Character/${characterID}_64.jpg`
 
 const Navbar = ({
     user,
+    router,
     logOutUserAction,
     navToComparisonShopper,
     navToMarketBrowser,
@@ -86,17 +94,19 @@ const Navbar = ({
         }
     };
 
+    const linkStyle = targetPath => ('link item' + ((router.location.pathname === targetPath) ? ' active' : ''));
+
     const middleMenuItems = () => {
         if (user.accessType && (user.accessType === 'write')) {
             return (
                 <Fragment>
-                    <div className='link item' onClick={navToHangarManager}>
+                    <div className={linkStyle(hangarManagerAddress)} onClick={navToHangarManager}>
                         Hangar<br/>Manager
                     </div>
-                    <div className='link item' onClick={navToMarketManager}>
+                    <div className={linkStyle(marketManagerAddress)} onClick={navToMarketManager}>
                         Market<br/>Manager
                     </div>
-                    <div className='link item' onClick={navToProductionManager}>
+                    <div className={linkStyle(productionManagerAddress)} onClick={navToProductionManager}>
                         Production<br/>Manager
                     </div>
                 </Fragment>
@@ -112,10 +122,10 @@ const Navbar = ({
                 <img className='ui mini image' src={logo} alt='logo'/>
                 EVE Outpost
             </div>
-            <div className='link item' onClick={navToMarketBrowser}>
+            <div className={linkStyle(marketBrowserAddress)} onClick={navToMarketBrowser}>
                 Market<br/>Browser
             </div>
-            <div className='link item' onClick={navToComparisonShopper}>
+            <div className={linkStyle(comparisonShopperAddress)} onClick={navToComparisonShopper}>
                 Comparison<br/>Shopper
             </div>
             {middleMenuItems()}

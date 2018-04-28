@@ -9,6 +9,7 @@ import errorReducer from './reducers/errorReducer';
 import locationReducer from './reducers/locationReducer';
 import pastLocationsReducer from './reducers/pastLocationsReducer';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import AppContainer from './containers/AppContainer';
 import 'semantic-ui-css/semantic.min.css';
 
@@ -21,7 +22,7 @@ const store = createStore(combineReducers({
     errorMessage: errorReducer,
     location: locationReducer,
     pastLocations: pastLocationsReducer
-}), applyMiddleware(thunk, reduxRouterMiddleware));
+}), composeWithDevTools(applyMiddleware(thunk, reduxRouterMiddleware)));
 
 render((
     <Provider store={store}>
