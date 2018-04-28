@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { oauthLogin } from '../services/oauth';
 import logo from '../images/logo.png';
 import './components.css';
 
@@ -23,9 +24,16 @@ const Navbar = ({
         )
     };
 
+    const emptyMenuItem = () => {
+        return (
+            <div className='item right'>
+            </div>            
+        )
+    }
+
     const logoutButton = () => {
         return (
-            <div id='nav-button' className='item right'>
+            <div className='item right nav-button'>
                 <button className="ui button" onClick={logOutUserAction}>
                     Logout
                 </button>
@@ -36,37 +44,43 @@ const Navbar = ({
     /**
      * Will return an appropriately styled JSX button that logs character
      * in via the appropriate OAuth path.
+     * @param {Boolean} isLoggedIn
      * @param {String} targetAccessType
      * @returns {JSX.Element} button
      */
-    const loginButton = targetAccessType => {
-        return null;
-    }
-
-    /**
-     * Will return a JSX button that will sequentially log character
-     * out and then log them in via the other accessType.
-     * @param {String} currentAccessType User's current accessType
-     * @returns {JSX.Element} button
-     */
-    const crossLoginButton = currentAccessType => {
-        return null;
+    const loginButton = (isLoggedIn, targetAccessType) => {
+        const logOutAndIn = () => {
+            logOutUserAction();
+            oauthLogin(targetAccessType);
+        }
+        const buttonText = (targetAccessType === 'read') ? 'Browser' : 'Manager';
+        const buttonClass = (targetAccessType === 'read') ? 'ui green button' : 'ui blue button';
+        const clickFunction = isLoggedIn ? logOutAndIn : oauthLogin(targetAccessType);
+        return (
+            <div className='item right nav-button'>
+                <button className={buttonClass} onClick={clickFunction}>
+                    Log In as<br/>{buttonText}
+                </button>
+            </div>
+        );
     }
 
     const rightMenuItems = () => {
         if (user.accessType) {
+            const oppositeAccess = (user.accessType === 'read') ? 'write' : 'read';
             return (
                 <Fragment>
                     {avatar(user.characterID)}
                     {logoutButton()}
-                    {crossLoginButton(user.accessType)}
+                    {loginButton(true, oppositeAccess)}
                 </Fragment>                
             )
         } else {
             return (
                 <Fragment>
-                    {loginButton('read')}
-                    {loginButton('write')}
+                    {emptyMenuItem()}
+                    {loginButton(false, 'read')}
+                    {loginButton(false, 'write')}
                 </Fragment>
             )
         }

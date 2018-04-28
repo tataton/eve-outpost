@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import StationFinder from '../components/StationFinder';
+import StationFinderForm from '../components/StationFinderForm';
 import { setLocationLocalAction, setLocationRemoteAction } from '../actions/location';
 import { getPastLocationsAction } from '../actions/pastLocations';
 
@@ -15,6 +15,6 @@ const mapDispatchToProps = dispatch => ({
     setLocationRemoteAction: (location) => dispatch(setLocationRemoteAction(location))
 });
 
-const StationFinderContainer = connect(mapStateToProps, mapDispatchToProps)(StationFinder);
+const StationFinderFormContainer = connect(mapStateToProps, mapDispatchToProps)(StationFinderForm);
 
-export default StationFinderContainer;
+export default StationFinderFormContainer;

@@ -5,13 +5,22 @@ const Promise = require('bluebird');
 const refreshUserToken = require('./service-refreshusertoken');
 const baseURL = 'https://esi.tech.ccp.is/latest';
 
+class AccessForbiddenError extends Error {
+    constructor(...args) {
+        super(...args)
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, AccessForbiddenError)
+        }
+    }
+}
+
 /**
- * Axios instance for un-authed requests. Includes simple re-try
- * interceptor.
+ * Axios instance for un-authed requests. Re-tries failed requests
+ * immediately.
  */
 const axiosWithRetry = axios.create({baseURL});
 const retryFailedRequest = (error) => {
-    if (error.status == 500 && error.config && !error.config.__isRetryRequest) {
+    if (error.status >= 500 && error.config && !error.config.__isRetryRequest) {
         error.config.__isRetryRequest = true;
         return axiosWithRetry(error.config);
     }
@@ -19,32 +28,30 @@ const retryFailedRequest = (error) => {
 };
 axiosWithRetry.interceptors.response.use(undefined, retryFailedRequest);
 
-/* All simple authed requests need to delay if they receive an error,
-because CCP throttles errors to 100/min, and rejects all requests
-beyond that threshhold. Requests in this channel are affected, as a 
-result, by errors in other channels; we have to be careful not to
-overload error limit. */
-
 /**
- * 
+ * Axios instance for authed requests. Authed requests often fail for
+ * non-auth, server-related (error status >=500) reasons, but these
+ * non-auth failures still count against ESI error limiting (100/min).
+ * As a result, re-tries need to be delayed/throttled.
  */
 const axiosWithDelayedRetry = axios.create({baseURL});
 const delayedRetryFailedRequest = (error) => {
-    if (error.config && !error.config.__isRetryRequest && error.status != 403) {
+    if (error.response.status == 403) {
+        throw new AccessForbiddenError("403 (Forbidden) in axiosWithDelayedRetry.");
+    }
+    else if (error.config && !error.config.__isRetryRequest) {
         error.config.__isRetryRequest = true;
-        if (error.response && error.response.data && error.response.data.error === 'expired') {
-            // Should force tokenUpdate here, then request again.
-        } else if (error.response && error.response.headers['x-esi-error-limit-reset']) {
-            console.log("Error limiting, waiting ", (1 * error.response.headers['x-esi-error-limit-reset'] + 2), " seconds.");
+        if (error.response && error.response.headers['x-esi-error-limit-reset']) {
             return Promise.delay(1000 * error.response.headers['x-esi-error-limit-reset'] + 2000)
                 .then(() => axiosWithDelayedRetry(error.config));
         } else {
-            console.log("Generic error, waiting 30 seconds.")
-            return Promise.delay(30000)
+            return Promise.delay(10000)
                 .then(() => axiosWithDelayedRetry(error.config));
         } 
+    } else {
+        throw new Error(error);
     }
-    throw error;
+
 };
 axiosWithDelayedRetry.interceptors.response.use(undefined, delayedRetryFailedRequest);
 
@@ -126,8 +133,6 @@ const getAllStructuresInSystem = (user, systemName, authType = 'read') => {
  * @returns {Promise<Object>} Properties of requested structure.
  */
 const getStructureInfo = (user, structureID, authType = 'read') => {
-// Retrieves data on a specific structure (ref by structureID).
-// Parameter 'user' is a Sequelize instance.
     return refreshUserToken(user, authType)
     // Make sure user (Sequelize ref) accessToken is updated,
     .then(accessToken => {
@@ -164,7 +169,7 @@ const getStructureInfo = (user, structureID, authType = 'read') => {
 
 /**
  * Retrieves data from ESI on a specific structure (referenced by
- * structureID), but with no market info.
+ * structureID). Does not include market info.
  * 
  * @param {Sequelize.Instance<User>} user Sequelize instance reference to character.
  * @param {Number} structureID for one structure

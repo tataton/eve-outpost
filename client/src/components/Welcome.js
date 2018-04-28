@@ -28,7 +28,7 @@ const Welcome = () => {
                         </div>
                         <div id='button-area-1' className='extra content'>
                             <button className='ui button'>
-                                <span style={{fontSize: '1.2rem'}}>Browse Public Markets</span><br/>
+                                <span style={{fontSize: '1.2rem'}}>Browse NPC Markets</span><br/>
                                 <p style={{fontStyle: 'italic', marginTop: '0', fontWeight: 'normal'}}>(without logging in)</p>
                             </button>
                             <div className='ui horizontal divider'>
@@ -40,7 +40,7 @@ const Welcome = () => {
                         </div>
                         <div id='footer-area-1' className='extra content'>                            
                             <div className='ui button-explanation'>
-                                Requests API access for inspecting both public and private-structure markets. Logging in saves your most recently visited market locations and loads them each time you visit.
+                                Requests API access for inspecting player-owned structure markets. Logging in also saves your most recently visited market locations and loads them each time you visit.
                             </div>
                         </div>
                     </div>

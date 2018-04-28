@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 import regionArray from '../data/regionArray';
+import './components.css';
 import {
     getSystemsInRegion, 
     getStationsInSystem,
@@ -9,7 +9,7 @@ import {
     getStructuresBySystemID
 } from '../services/geography';
 
-class StationFinder extends Component {
+class StationFinderForm extends Component {
     constructor(props) {
         super(props);
         this.initialRegion = null;
@@ -97,7 +97,7 @@ class StationFinder extends Component {
 
         return (
             <div className='ui form'>
-                <div className='field'>
+                <div className='field inline'>
                     <label>Region</label>
                     <Select
                         name='regionSelect'
@@ -112,7 +112,7 @@ class StationFinder extends Component {
                     >
                     </Select>
                 </div>
-                <div className='field'>
+                <div className='field inline'>
                     <label>System</label>
                     <Select
                         name='systemSelect'
@@ -134,4 +134,4 @@ class StationFinder extends Component {
 
 }
 
-export default StationFinder;
+export default StationFinderForm;

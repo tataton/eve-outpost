@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import './components.css';
-import StationFinderContainer from '../containers/StationFinderContainer';
+import SelectedStationContainer from '../containers/SelectedStationContainer';
+import StationSelect from '../components/StationSelect';
 
 const MarketBrowser = () => {
     return (
-        <div className='ui background'>
-            <div className='ui center aligned container img-overlay'>
-                <div className='img-overlay-title'>
-                    Market Browser
+        <Fragment>
+            <SelectedStationContainer />
+            <StationSelect />
+            <div className='ui background'>
+                <div className='ui center aligned container img-overlay'>
+                    <div className='img-overlay-title'>
+                        Market Browser
+                    </div>
                 </div>
-                <StationFinderContainer />
             </div>
-        </div>
+        </Fragment>
     )
 };
 
