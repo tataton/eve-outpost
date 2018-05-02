@@ -16,7 +16,7 @@ router.get('/systemsinregion/:regionid', (req, res) => {
     .catch(error => {console.log(error)})
 });
 
-router.get('/stationsinsystem/:solarsystemid', (req, res) => {
+router.get('/stationsinsystem/:solarsystemid', (req, res) => { 
     Station.findAll({
         where: {solarSystemID: req.params.solarsystemid},
         attributes: ['stationID', 'stationName']

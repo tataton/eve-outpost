@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import StationSelectContainer from '../containers/StationSelectContainer';
 import { oauthLogin } from '../services/oauth';
 import logo from '../images/logo.png';
 import './components.css';
@@ -32,12 +33,7 @@ const Navbar = ({
         )
     };
 
-    const emptyMenuItem = () => {
-        return (
-            <div className='item right'>
-            </div>            
-        )
-    }
+    const emptyMenuItem = () => (<div className='item right'></div>)
 
     const logoutButton = () => {
         return (
@@ -116,21 +112,28 @@ const Navbar = ({
         }
     }
 
+    const secondMenu = () => (router.location.pathname !== '/') ?
+                                (<StationSelectContainer />) :
+                                null;
+
     return (
-        <div className='ui top fixed inverted menu'>
-            <div className='header item'>
-                <img className='ui mini image' src={logo} alt='logo'/>
-                EVE Outpost
+        <Fragment>
+            <div className='ui top fixed inverted menu firstmenu'>
+                <div className='header item'>
+                    <img className='ui mini image' src={logo} alt='logo'/>
+                    EVE Outpost
+                </div>
+                <div className={linkStyle(marketBrowserAddress)} onClick={navToMarketBrowser}>
+                    Market<br/>Browser
+                </div>
+                <div className={linkStyle(comparisonShopperAddress)} onClick={navToComparisonShopper}>
+                    Comparison<br/>Shopper
+                </div>
+                {middleMenuItems()}
+                {rightMenuItems()}
             </div>
-            <div className={linkStyle(marketBrowserAddress)} onClick={navToMarketBrowser}>
-                Market<br/>Browser
-            </div>
-            <div className={linkStyle(comparisonShopperAddress)} onClick={navToComparisonShopper}>
-                Comparison<br/>Shopper
-            </div>
-            {middleMenuItems()}
-            {rightMenuItems()}
-        </div>
+            {secondMenu()}
+        </Fragment>
     )
 };
 

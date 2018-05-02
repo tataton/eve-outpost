@@ -16,3 +16,12 @@ export function setLocationRemoteAction (location) {
             .catch(error => {})
     }
 }
+
+export function getLocationObjectRemoteAction () {
+    return (dispatch) => {
+        return axios.get('/location/getlocations')
+            .then(response => response.data)
+            .then(location => dispatch(setLocationLocalAction(location)))
+            .catch(error => {})
+    }
+}

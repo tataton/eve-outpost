@@ -9,7 +9,7 @@ import {
     getStructuresBySystemID
 } from '../services/geography';
 
-class StationFinderForm extends Component {
+class StationSelectForm extends Component {
     constructor(props) {
         super(props);
         this.initialRegion = null;
@@ -134,4 +134,4 @@ class StationFinderForm extends Component {
 
 }
 
-export default StationFinderForm;
+export default StationSelectForm;

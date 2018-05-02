@@ -15,39 +15,41 @@
     font-size: 1.2rem;
 }
 
-.card-panel-read {
-    background-color: green!important;
-    max-height: 45px!important;
+.ui.cards>.card>.content.titlepanel {
+    max-height: 45px;
 }
 
-.card-panel-write {
-    background-color: blue!important;    
-    max-height: 45px!important;
+.ui.cards>.card>.content.titlepanel.read {
+    background-color: #006000;
 }
 
-.card-title {
-    color: white!important;
+.ui.cards>.card>.content.titlepanel.write {
+    background-color: #0000CC;
 }
 
-.card-description {
+.ui.cards>.card>.content.titlepanel>.title {
+    color: white;
+}
+
+.ui.cards>.card>.content.featurelist {
+    min-height: 90px;
+    max-height: 90px;
+}
+
+.ui.cards>.card>.content>.description {
     margin-top: 0;
     text-align: justify;
 }
 
-.card-feature-list {
-    min-height: 90px!important;
-    max-height: 90px!important;
-}
-
-#button-area-1, 
-#button-area-2 {
+.ui.cards>.card>.extra.content {
     border-top: 0!important;
 }
 
-#footer-area-1, 
-#footer-area-2 {
-    border-top: 0!important;
-    min-height: 100px!important;
+.ui.cards>.card>.extra.content.footer {
+    min-height: 120px!important;
+    margin-top: 0.2rem;
+    font-style: italic;
+    text-align: justify;
 }
 
 .button-explanation {
@@ -65,6 +67,27 @@
     background-size: cover!important;
 }
 
+.ui.top.fixed.menu.firstmenu {
+    height: 62px;
+}
+
+.ui.top.fixed.menu.secondmenu {
+    top: 62px;
+    background-color: #404040;
+    padding: 1em 1em 0 1em;
+    border-bottom: 5px;
+    border-bottom-color: #808080;
+    border-bottom-style: solid;
+}
+
+.ui.top.fixed.menu.secondmenu>p {
+    color: white;
+}
+
+.ui.menu.secondmenu>.secondmenuitem {
+    padding: 0;
+}
+
 .ui.menu .link.item {
     text-align: center;
     line-height: 1.2;
@@ -80,19 +103,27 @@
     padding: 1em;
 }
 
-.ui.selectedstation {
-    width: 100%;
-    margin-top: 4rem;
-    background-color: grey;
-    padding: 1em;
-}
-
 .ui.menu:not(.vertical) .item.right.nav-button {
     margin-left: 0!important;
 }
 
-#nav-button {
-    margin-left: 0!important;
+.nav-button>.ui.button {
+    font-weight: normal;  
+}
+
+.nav-button>.ui.green.button {
+    background-color: #006000;
+}
+
+.nav-button>.ui.blue.button {
+    background-color: #0000CC;
+}
+
+.ui.menu.secondmenu>.secondmenuitem>.button {
+    background-color: #808080;
+    color: white;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .ui.form .field.inline {

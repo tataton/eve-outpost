@@ -16,10 +16,10 @@ const AUTH_URL = 'https://login.eveonline.com/oauth/authorize';
 const TOKEN_URL = 'https://login.eveonline.com/oauth/token';
 const AUTH_VERIFY_URL = 'https://login.eveonline.com/oauth/verify';
 
-const callbackURLString = (accessType) =>
+const callbackURLString = accessType =>
     `${process.env.CALLBACK_PROTOCOL}://${process.env.CALLBACK_FQDN}/auth/${accessType}/callback`;
 
-const User = require('../services/service-database').User;
+const { User, UserLocation } = require('../services/service-database');
 
 /**
  * Generates callback function required for OAuth strategy declaractions;
@@ -28,8 +28,8 @@ const User = require('../services/service-database').User;
  * @param {string} accessType String representing a unique OAuth strategy.
  * @returns {function} Callback function called by Passport.
  */
-const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => {
-    axios({
+const updateAuth = accessType => ((accessToken, refreshToken, profile, cb) => {
+    return axios({
         method: 'get',
         url: AUTH_VERIFY_URL,
         headers: {'Authorization': `Bearer ${accessToken}`},
@@ -41,6 +41,9 @@ const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => 
             // First, search User database for characterID.
             .findOne({where: {characterID: character.CharacterID}})
             .then(foundUser => {
+                const userLocationProps = {
+                    characterID: character.CharacterID                    
+                }
                 const userProps = { 
                     characterID: character.CharacterID,
                     characterName: character.CharacterName,
@@ -63,7 +66,8 @@ const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => 
                     // (Promise is rejected only if there is an error
                     // accessing the database.) In this case, create new
                     // user with character object.
-                    User.create(userProps)
+                    User.create(userProps);
+                    UserLocation.create(userLocationProps)
                 }
             });
         character.accessType = accessType;
@@ -88,7 +92,7 @@ const updateAuth = (accessType) => ((accessToken, refreshToken, profile, cb) => 
  * @param {string} accessType String representing a unique OAuth strategy.
  * @returns {OAuth2Strategy} Named OAuth2Strategy for consumption by Passport.
  */
-const strategy = (accessType) => (new OAuth2Strategy(
+const strategy = accessType => (new OAuth2Strategy(
     {
         authorizationURL: AUTH_URL,
         tokenURL: TOKEN_URL,
